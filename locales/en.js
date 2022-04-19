@@ -5,7 +5,6 @@ module.exports = {
     "register.fail":"registration failed",
     "auth.fail1":"No Token Found in Headers",
     "auth.fail2":"Wrong or Expired token",
-    "auth.fail3":"Two Factor Authentication is enabled but OTP was not verified at the time of login",
     "Plant.added":"Plant is added",
     "Plant.failed":"can't add Plant",
     "Plant.wrong_price":"Plant quantity should be greater than or equal to zero",

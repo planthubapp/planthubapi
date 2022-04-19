@@ -30,10 +30,11 @@ module.exports = {
             console.log("ERROR is : ",err);
         }
     },
-    async activate_acc(key){
+    async acctivate_acc(email,key){
         try{
             var doc = await UserModel.updateOne(
                 {
+                    "emailid":email,
                     "key":key
                 },
                 {
@@ -48,24 +49,15 @@ module.exports = {
             console.log("ERROR is : ",err);
         }
     },
-    async find_by_key(key){
+    async verify_otp(email,key){
         try{
-            var user = await UserModel.findOne(
+            var doc = await UserModel.findOne(
                 {
+                    "emailid":email,
                     "key":key
-                },
-                {
-                    "_id":0,
-                    "emailid":1,
-                    "user_id":1
                 }
             );
-            if(user){
-                return user;
-            }
-            else{
-                return null;
-            }
+            return doc;
         }
         catch(err){
             console.log("ERROR is : ",err);
@@ -90,25 +82,6 @@ module.exports = {
             console.log("ERROR is : ",err);
         }
     },
-    async check_old_pass(email,pass){
-        try{
-            var doc= await UserModel.findOne({"emailid":email});
-            if(doc){
-                if(encryption.comapreHash(doc.old_pass,pass)){
-                    return doc;
-                }
-                else{
-                    return null;
-                }
-            }
-            else{
-                return null;
-            }
-        }
-        catch(err){
-            console.log("ERROR is : ",err);
-        }
-    },
     async save_key(email,otp){
         try{
             var saved = await UserModel.updateOne(
@@ -118,92 +91,6 @@ module.exports = {
                 {
                     $set:{
                         "key":otp
-                    }
-                }
-            );
-            return saved;
-        }
-        catch(err){
-            console.log("ERROR is : ",err);
-        }
-    },
-    async uncheck_otp(user_id){
-        try{
-            var checked = await UserModel.updateOne(
-                {
-                    "user_id":user_id
-                },
-                {
-                    $set:{
-                        "otp_checked":0
-                    }
-                }
-            );
-            return checked;
-        }
-        catch(err){
-            console.log("ERROR is : ",err);
-        }
-    },
-    async verify_otp(user_id,otp){
-        try{
-            var found = await UserModel.findOne(
-                {
-                    "user_id":user_id,
-                    "key":otp
-                },
-                {
-                    "_id":1
-                }
-            );
-            if(found){
-                return found;
-            }
-            else{
-                return null;
-            }
-        }
-        catch(err){
-            console.log("ERROR is : ",err);
-        }
-    },
-    async otp_checked(user_id){
-        try{
-            var checked = await UserModel.updateOne(
-                {
-                    "user_id":user_id
-                },
-                {
-                    $set:{
-                        "otp_checked":1
-                    }
-                }
-            );
-            return checked;
-        }
-        catch(err){
-            console.log("ERROR is : ",err);
-        }
-    },
-    async save_old_pass(email){
-        try{
-            var find = await UserModel.findOne(
-                {
-                    "emailid":email
-                },
-                {
-                    "_id":0,
-                    "password":1
-                }
-            );
-            var old_pass = find.password;
-            var saved = await UserModel.updateOne(
-                {
-                    "emailid":email
-                },
-                {
-                    $set:{
-                        "old_pass":old_pass
                     }
                 }
             );
@@ -289,25 +176,6 @@ module.exports = {
                 }
             );
             return activate;
-        }
-        catch(err){
-            console.log("ERROR is : ",err);
-        }
-    },
-    async update_pass_for_recovery(admin_id,pass){
-        try{
-            pass = encryption.generateHash(pass);
-            var update = await UserModel.updateOne(
-                {
-                    "admin_id":admin_id
-                },
-                {
-                    $set:{
-                        "password":pass
-                    }
-                }
-            );
-            return update;
         }
         catch(err){
             console.log("ERROR is : ",err);

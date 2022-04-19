@@ -57,13 +57,36 @@ const userController = {
             response.status(SERVER_CRASH).json({message:messageBundle['register.fail'],err:err})
         });
     },
+    async activate_acc(request,response){
+        try{
+            var email = request.body.email;
+            var key = request.body.key;
+            var activate = await userOperations.acctivate_acc(email,key);
+            if(activate.modifiedCount && key && email){
+                var user = await userOperations.find_by_email(email);
+                sendmail(user.emailid,emailBundle['activatesuccessfull.sub'],emailBundle['activatesuccessfull.body']);
+                response.status(SUCCESS).send(HTMLBundle['activate.html']);
+            }
+            else{
+                response.status(NOT_FOUND).json({message:messageBundle['activate.unsuccessful']});
+            }
+        }
+        catch(err){
+            response.status(SERVER_CRASH).json({message:messageBundle['unsuccessful'],ERROR:err});
+        }
+    },
     async login(request,response){
         try{
             var user = request.body;
             var doc = await userOperations.login(user);
             if(doc){
-                sendmail(user.email,emailBundle['login.sub'],emailBundle['login.body']);
-                response.status(SUCCESS).json({message:messageBundle['login.welcome'],name:doc.name,token:token,two_factor_authentication:0});
+               if(doc.isActivated==1){
+                    sendmail(user.email,emailBundle['login.sub'],emailBundle['login.body']);
+                    response.status(SUCCESS).json({message:messageBundle['login.welcome'],name:doc.name,token:token,two_factor_authentication:0});
+               }
+               else{
+                response.status(NOT_FOUND).json({message:messageBundle['account.not_activated']});
+               }
             }    
             else{
                 response.status(NOT_FOUND).json({message:messageBundle['login.invaliduser']});
@@ -100,12 +123,11 @@ const userController = {
         try{
             var email = request.body.email;
             var otp = request.body.otp;
-            var check_key = await userOperations.find_by_key(otp);
-            if(check_key){
-                var save_old_pass = await userOperations.save_old_pass(check_key.emailid);
-                var update_pass = await userOperations.update_pass_for_recovery(check_key.user_id,password);
-                if(update_pass.modifiedCount && save_old_pass.modifiedCount){
-                    sendmail(check_key.emailid,emailBundle['account_recover.sub'],emailBundle['account_recover.body']);
+            var verify = await userOperations.verify_otp(email,otp);
+            if(verify){
+                var update_pass = await userOperations.update_pass_by_email(email,password);
+                if(update_pass.modifiedCount){
+                    sendmail(user.emailid,emailBundle['account_recover.sub'],emailBundle['account_recover.body']);
                     response.status(SUCCESS).json({message:messageBundle['acc_recovery.success']});
                 }
                 else{
