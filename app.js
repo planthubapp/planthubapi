@@ -13,6 +13,7 @@ app.use(cors());                            //using cors
     //ROUTES AVAILABLE BEFORE ANY LOGIN     (basically these routes dont require token in headers/authorization)
     app.use(ROOT,require('./api/routes/user_login_register'));     //user - login,register,forgot pass, acc recover
     app.use(ROOT,require('./api/routes/view_plants'));
+    app.use(ROOT,require('./api/routes/activate_news_letter')); //activate news letter service both for registered, non-registered users 
     //Authentication for USER
 
     //all admins, users can access this section after authentication
@@ -22,6 +23,7 @@ app.use(cors());                            //using cors
     //all ADMIN section 
     app.use(ROOT,require('./api/routes/plants_crud'));      //plants crud
     app.use(ROOT,require('./api/routes/direct_change.js')) //to direct change in plants
+    app.use(ROOT,require('./api/routes/send_news_letter')); //send news letter to user and to those who have activated news letter service.
 
 app.use(require('./utils/middlewares/404'));                //ifuser has typed something wrong
 
