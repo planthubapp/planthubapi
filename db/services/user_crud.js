@@ -39,7 +39,7 @@ module.exports = {
                 },
                 {
                     $set:{
-                        "account_activated":1
+                        "account_activated":true
                     }
                 }
             );

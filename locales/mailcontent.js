@@ -1,6 +1,6 @@
 module.exports = {
     "registersuccessfull.sub":"You are successfully registered to Electronic Mart",
-    "registersuccessfull.body":"Please click on this link to activate your account \n link  :  https://electronics-mart-api.herokuapp.com/activate_acc?key=",
+    "registersuccessfull.body":"Your OTP for activating Plant Hub Account is : ",
     "adminregistersuccessfull.body":"Please click on this link to activate your account \n link  :  https://electronics-mart-api.herokuapp.com/activate_admin_acc?key=",
     "activatesuccessfull.sub":"Your account is successfully activated",
     "activatesuccessfull.body":"Don't miss daily Deals and special offers.",

@@ -43,6 +43,7 @@ const userController = {
                 Pincode:request.body.address.Pincode,
                 Landmark:request.body.address.Landmark
             },
+            account_activated:false,
             key:key_
         }
         var promise = userOperations.register(userObject);
@@ -60,12 +61,11 @@ const userController = {
     async activate_acc(request,response){
         try{
             var email = request.body.email;
-            var key = request.body.key;
-            var activate = await userOperations.acctivate_acc(email,key);
-            if(activate.modifiedCount && key && email){
-                var user = await userOperations.find_by_email(email);
-                sendmail(user.emailid,emailBundle['activatesuccessfull.sub'],emailBundle['activatesuccessfull.body']);
-                response.status(SUCCESS).send(HTMLBundle['activate.html']);
+            var otp = request.body.otp;
+            var activate = await userOperations.acctivate_acc(email,otp);
+            if(activate.modifiedCount && otp && email){
+                sendmail(email,emailBundle['activatesuccessfull.sub'],emailBundle['activatesuccessfull.body']);
+                response.status(SUCCESS).json({message:messageBundle['activate.successful']});
             }
             else{
                 response.status(NOT_FOUND).json({message:messageBundle['activate.unsuccessful']});
@@ -80,9 +80,10 @@ const userController = {
             var user = request.body;
             var doc = await userOperations.login(user);
             if(doc){
-               if(doc.isActivated==1){
+               if(doc.account_activated){
+                    token = jwt.generateToken(doc);
                     sendmail(user.email,emailBundle['login.sub'],emailBundle['login.body']);
-                    response.status(SUCCESS).json({message:messageBundle['login.welcome'],name:doc.name,token:token,two_factor_authentication:0});
+                    response.status(SUCCESS).json({message:messageBundle['login.welcome'],name:doc.name,token:token});
                }
                else{
                 response.status(NOT_FOUND).json({message:messageBundle['account.not_activated']});

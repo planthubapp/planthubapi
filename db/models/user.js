@@ -15,7 +15,7 @@ const userSchema = new Schema({
         Pincode:{type:SchemaTypes.Number,required:true},
         Landmark:{type:SchemaTypes.String,required:true}
     },
-    isActivated:{type:SchemaTypes.Number,required:true},
+    account_activated:{type:SchemaTypes.Boolean,required:true},
     key:{type:SchemaTypes.Number,required:true}
 },
 {

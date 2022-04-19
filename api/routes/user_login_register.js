@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const {login,forgot_pass,register,acc_recover, check_email} = require('../../controller/user.js');
-const {LOGIN,FORGOT_PASS,REGISTER,ACC_RECOVER,CHECK_EMAIL} = require('../../utils/config').ROUTES.USER;
+const {login,forgot_pass,register,acc_recover, check_email, activate_acc} = require('../../controller/user.js');
+const {LOGIN,FORGOT_PASS,REGISTER,ACC_RECOVER,CHECK_EMAIL,ACTIVATE_ACC} = require('../../utils/config').ROUTES.USER;
 router.post(CHECK_EMAIL,check_email);
 router.post(LOGIN,login);
 router.post(FORGOT_PASS,forgot_pass);
 router.post(REGISTER,register);
 router.post(ACC_RECOVER,acc_recover);
+router.post(ACTIVATE_ACC,activate_acc);
 module.exports = router;

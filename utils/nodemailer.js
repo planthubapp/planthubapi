@@ -24,7 +24,6 @@ const mailOptions = {
 
 transporter.sendMail(mailOptions, function (err, info) {
     if (err) console.log(err);
-    else console.log(info)
 });
 }
 module.exports = sendmail;
