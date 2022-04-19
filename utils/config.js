@@ -26,6 +26,7 @@ module.exports = {
             CHECK_OTP:'/check_otp',
             FORGOT_PASS:'/forgot_pass',
             ACC_RECOVER:'/acc_recover',
+            ENTER_NEW_PASS:'/enter_new_pass',
             LOGOUT:'/logout',
             UPDATE_NAME:'/update_user_name',
             UPDATE_EMAIL:'/update_user_email',

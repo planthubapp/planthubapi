@@ -126,14 +126,25 @@ const userController = {
             var otp = request.body.otp;
             var verify = await userOperations.verify_otp(email,otp);
             if(verify){
-                var update_pass = await userOperations.update_pass_by_email(email,password);
-                if(update_pass.modifiedCount){
-                    sendmail(user.emailid,emailBundle['account_recover.sub'],emailBundle['account_recover.body']);
-                    response.status(SUCCESS).json({message:messageBundle['acc_recovery.success']});
-                }
-                else{
-                    response.status(SERVER_CRASH).json({message:messageBundle['acc_recovery.fail']});
-                }
+                response.status(SUCCESS).json({message:messageBundle['acc_recovery.success'],OTP:otp});
+            }
+            else{
+                response.status(NOT_FOUND).json({message:messageBundle['acc_recovery.fail']});
+            }
+        }
+        catch(err){
+            response.status(SERVER_CRASH).json({message:messageBundle['unsuccessful'],ERROR:err});
+        }
+    },
+    async update_pass_by_otp(request,response){
+        try{
+            var email = request.body.email;
+            var otp = request.body.otp;
+            var password = request.body.pwd;
+            var update = await userOperations.update_pass_by_otp(email,otp,password);
+            if(update.modifiedCount){
+                sendmail(email,emailBundle['account_recover.sub'],emailBundle['account_recover.body']);
+                response.status(SUCCESS).json({message:messageBundle['acc_recovery.success']});
             }
             else{
                 response.status(NOT_FOUND).json({message:messageBundle['acc_recovery.fail']});

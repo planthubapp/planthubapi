@@ -63,6 +63,26 @@ module.exports = {
             console.log("ERROR is : ",err);
         }
     },
+    async update_pass_by_otp(email,otp,password){
+        try{
+            password = encryption.generateHash(password);
+            var doc = await UserModel.updateOne(
+                {
+                    "emailid":email,
+                    "key":otp
+                },
+                {
+                    $set:{
+                        "password":password
+                    }
+                }
+            );
+            return doc;
+        }
+        catch(err){
+            console.log("ERROR is : ",err);
+        }
+    },
     async login({email,pwd}){
         try{
             var doc= await UserModel.findOne({"emailid":email});

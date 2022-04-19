@@ -45,6 +45,7 @@ module.exports = {
     "forgotpass.fail":"The Process Failed due to some error please try again",
     "forgotpass.success":"Account Recovery mail is sent to your email please check and set a new password",
     "acc_recovery.fail":"Account recovery failed",
+    "acc_recovery.processing":"OTP is verified, you can enter password",
     "acc_recovery.success":"Account recovered successfully, now you can login with this new password",
     "update_pass.fail":"Update Password was failed due to some reason please try again",
     "old_pass.success":"you have entered an old password",
